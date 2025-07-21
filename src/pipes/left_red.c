@@ -6,7 +6,7 @@
 /*   By: kwillian <kwillian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/28 20:18:49 by kwillian          #+#    #+#             */
-/*   Updated: 2025/07/13 17:34:57 by kwillian         ###   ########.fr       */
+/*   Updated: 2025/07/16 21:34:18 by kwillian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,17 +74,18 @@ void	handle_single_left(t_cmd *cmd, t_shell *shell)
 {
 	int	file_index;
 
+	(void)shell;
 	file_index = find_input_file_index(cmd->args, 0);
 	if (file_index == -1)
 	{
 		write(2, "Arquivo não fornecido para redirecionamento\n", 45);
-		shell->exit_code = 127;
+		exit(1);
 	}
 	cmd->redirect->infd = open(cmd->args[file_index], O_RDONLY);
 	if (cmd->redirect->infd < 0)
 	{
-		shell->exit_code = 126;
-		perror("open");
+		perror(cmd->args[file_index]);
+		exit(1);
 	}
 }
 

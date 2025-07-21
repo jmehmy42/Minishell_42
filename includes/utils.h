@@ -6,7 +6,7 @@
 /*   By: kwillian <kwillian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 20:40:04 by kwillian          #+#    #+#             */
-/*   Updated: 2025/07/14 01:24:33 by kwillian         ###   ########.fr       */
+/*   Updated: 2025/07/18 19:06:13 by kwillian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,9 @@
 //MINISHELL
 void	init(t_shell *shell, char **env);
 int		run(t_shell *shell);
+
+//HEREDOC
+int		is_heredoc(t_cmd *cmd);
 
 //CLOSES
 void	close_redirections(t_cmd *cmd);
@@ -44,12 +47,14 @@ void	run_children(t_shell *shell, t_cmd_r *clean, \
 void	free_split(char **split);
 int		here_doc(char *limiter);
 void	handle_redirection_left_input(t_cmd *cmd, t_shell *shell);
-void	handle_redirection_right_input(t_cmd *cmd,  t_shell *shell);
+void	handle_redirection_right_input(t_cmd *cmd, t_shell *shell);
 int		dptr_len(char **ptr);
 char	**dptr_dup_replace(char **env, char *new_entry, int index);
 char	**dptr_dup_add(char **env, char *new_entry);
 char	*strjoin_free(char *s1, char *s2);
 int		is_valid_identifier(char *str);
+int		check_is_dir(const char *path);
+int		ft_strcmp2(char *s1, char *s2);
 
 //builtins
 void	builtins_analyzer(t_shell *shell, int flag, char **argv);
@@ -66,6 +71,7 @@ int		create_empty_output_file(char *type, char *filename);
 int		find_input_file_index(char **content, int i);
 int		find_next_double_left_index(t_cmd *cmd, int start);
 int		is_redirection_token(char *s);
+void	save_last_cmd(t_shell *shell, char **args);
 
 //alocation
 int		mlc_size(int j, char **mlc);
@@ -81,9 +87,14 @@ char	*special_cleaner(const char *s1, const char *s2, t_shell *shell);
 void	line_helper2(t_pipexinfo *info);
 void	line_helper(t_pipexinfo *info);
 void	export_print(char **argv);
+void	l_comander(t_shell *shell, char *args);
+void	finder_and_update(t_shell *shell);
 
 //ECHO
 void	build_echo(t_shell *shell, char **args);
+void	join_expand(t_shell *data, char **result, char **str, \
+		bool is_double_quote);
+char	*expand_result(t_shell *data, char **line, bool is_double_quote);
 
 //CD
 void	build_cd(t_shell *shell);
@@ -114,6 +125,7 @@ char	**merge_exp_lists(char **old, char **new, char **env);
 int		find_in_env(char **env, const char *key);
 char	*join_export(char *name, char *value);
 void	update_export_var(t_shell *shell, char *arg);
+int		check_duplicate_var_exist(char **env, const char *str);
 
 //UNSET
 void	build_unset(t_shell *shell, char **new_exp);
@@ -130,5 +142,6 @@ char	*get_path(char *cmd, char **envp);
 //SIGNALS
 void	signal_search(t_sig_t t);
 void	here_signal(int signal, siginfo_t *info, void *context);
+void	root_signal(int signal, siginfo_t *info, void *context);
 
 #endif

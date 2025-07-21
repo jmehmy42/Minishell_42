@@ -6,7 +6,7 @@
 /*   By: kwillian <kwillian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 20:40:04 by kwillian          #+#    #+#             */
-/*   Updated: 2025/07/13 18:10:03 by kwillian         ###   ########.fr       */
+/*   Updated: 2025/07/18 18:16:41 by kwillian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
+# include <sys/stat.h>
 
 # define INPUT 1
 # define HEREDOC 2
@@ -96,6 +97,7 @@ typedef struct s_cmd
 	char				**args;
 	t_red				*redirect;
 	struct s_cmd		*next;
+	int					skip;
 }						t_cmd;
 
 typedef struct s_cmd_r
@@ -159,6 +161,6 @@ void					free_redirections(t_red *redir);
 void					print_redirects(t_red *red);
 void					debug_tokens(t_token *token);
 void					free_cmds(t_cmd *cmd);
-void					save_last_cmd(t_shell *shell, char  **args);
+void					save_last_cmd(t_shell *shell, char **args);
 
 #endif

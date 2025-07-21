@@ -6,7 +6,7 @@
 /*   By: kwillian <kwillian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 01:48:21 by kwillian          #+#    #+#             */
-/*   Updated: 2025/07/05 20:51:53 by kwillian         ###   ########.fr       */
+/*   Updated: 2025/07/18 18:18:23 by kwillian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,10 @@ char	*create_export_line(const char *env_entry)
 
 	equal = ft_strchr(env_entry, '=');
 	if (!equal)
-		return (ft_strjoin("declare -x ", env_entry));
+	{
+		equal = ft_strjoin("", env_entry);
+		return (equal);
+	}
 	name = ft_substr(env_entry, 0, equal - env_entry + 1);
 	if (!name)
 		return (NULL);
@@ -70,6 +73,11 @@ static int	fill_export_array(char **formatted, char **env)
 	j = 0;
 	while (env[i])
 	{
+		if (!is_valid_identifier(env[i]))
+		{
+			i++;
+			continue ;
+		}
 		formatted[j] = create_export_line(env[i]);
 		if (!formatted[j])
 			break ;

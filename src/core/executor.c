@@ -6,7 +6,7 @@
 /*   By: kwillian <kwillian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 18:28:02 by kwillian          #+#    #+#             */
-/*   Updated: 2025/07/13 19:02:29 by kwillian         ###   ########.fr       */
+/*   Updated: 2025/07/18 18:44:52 by kwillian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,6 @@ static void	exec_builtin(t_shell *sh, t_cmd_r *cl, int flag)
 {
 	int	code;
 
-	if (sh->exit_code == 126 || sh->exit_code == 127)
-	{
-		code = sh->exit_code;
-		free_token_list(sh);
-		close_extra_fds();
-		close_redirections(sh->cmd);
-		final_cleaner(sh);
-		exit(code);
-	}
 	if (!ft_strncmp(cl->args[0], "export", 7) && sh->count > 1 && !cl->args[1])
 		export_print(sh->exp);
 	else
@@ -37,41 +28,71 @@ static void	exec_builtin(t_shell *sh, t_cmd_r *cl, int flag)
 	exit(code);
 }
 
-void	non_path(t_shell *sh, char *full)
+void	non_path(t_shell *sh, char *full, t_cmd_r *cl)
 {
-	printf("full %s", full);
-	perror("command not found");
+	ft_putstr_fd(cl->args[0], 2);
+	ft_putstr_fd(": command not found\n", 2);
+	if (full)
+		free(full);
 	final_cleaner(sh);
 	exit(127);
+}
+
+static void	check_access_and_errors(t_shell *sh, char *full)
+{
+	if (access(full, F_OK) != 0)
+	{
+		ft_putstr_fd(full, 2);
+		ft_putstr_fd(": No such file or directory\n", 2);
+		free(full);
+		final_cleaner(sh);
+		exit(127);
+	}
+	if (check_is_dir(full))
+	{
+		ft_putstr_fd(full, 2);
+		ft_putstr_fd(": Is a directory\n", 2);
+		free(full);
+		final_cleaner(sh);
+		exit(126);
+	}
+	if (access(full, X_OK) != 0)
+	{
+		ft_putstr_fd(full, 2);
+		ft_putstr_fd(": Permission denied\n", 2);
+		free(full);
+		final_cleaner(sh);
+		exit(126);
+	}
 }
 
 static void	exec_external(t_shell *sh, t_cmd_r *cl)
 {
 	char	*full;
-	int		code;
 
 	close_extra_fds();
-	full = get_path(cl->args[0], sh->env);
-	if (!full)
-		non_path(sh, full);
-	if (sh->exit_code == 126 || sh->exit_code == 127)
+	if (!ft_strchr(cl->args[0], '/'))
 	{
-		code = sh->exit_code;
-		free(full);
-		free_token_list(sh);
-		close_extra_fds();
-		close_redirections(sh->cmd);
-		final_cleaner(sh);
-		exit(code);
+		full = get_path(cl->args[0], sh->env);
+		if (!full || ft_strcmp2(full, cl->args[0]) == 0)
+			non_path(sh, full, cl);
 	}
 	else
 	{
-		execve(full, cl->args, sh->env);
-		perror("execve: ");
-		free(full);
-		final_cleaner(sh);
-		exit(1);
+		full = ft_strdup(cl->args[0]);
+		if (!full)
+		{
+			perror("malloc");
+			final_cleaner(sh);
+			exit(1);
+		}
 	}
+	check_access_and_errors(sh, full);
+	execve(full, cl->args, sh->env);
+	perror("execve");
+	free(full);
+	final_cleaner(sh);
+	exit(1);
 }
 
 void	executor(t_shell *shell, t_cmd_r *clean)

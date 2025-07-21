@@ -6,7 +6,7 @@
 /*   By: kwillian <kwillian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 22:49:27 by kwillian          #+#    #+#             */
-/*   Updated: 2025/07/13 18:59:47 by kwillian         ###   ########.fr       */
+/*   Updated: 2025/07/17 19:19:42 by kwillian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,10 +89,16 @@ void	update_env_export(t_shell *shell, char **args)
 			if (ft_strchr(arg, '='))
 				update_env_var(shell, arg);
 			else
-				update_export_var(shell, arg);
+			{
+				if (check_duplicate_var_exist(shell->exp, arg) == 0)
+					update_export_var(shell, arg);
+			}
 		}
 		else
+		{
 			ft_putstr_fd("export: not a valid identifier\n", 2);
+			shell->exit_code = 1;
+		}
 		i++;
 	}
 }
