@@ -3,76 +3,44 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jmehmy <jmehmy@student.42lisboa.com>       +#+  +:+       +#+        */
+/*   By: joanda-s <joanda-s@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/06 12:31:48 by jmehmy            #+#    #+#             */
-/*   Updated: 2025/03/07 11:13:36 by jmehmy           ###   ########.fr       */
+/*   Created: 2023/10/17 12:06:29 by thguimar          #+#    #+#             */
+/*   Updated: 2024/08/20 16:51:47 by joanda-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-/*
+
 char	*ft_strjoin(char const *s1, char const *s2)
 {
-	size_t	i;
-	size_t	j;
-	char	*str;
+	int		i;
+	int		j;
+	char	*rtn;
 
 	i = 0;
-	if (!s1 || !s2)
-		return (NULL);
-	str = (char *)malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
-	if (str == NULL)
-		return (NULL);
-	while (s1[i] != '\0')
-	{
-		str[i] = s1[i];
-		i++;
-	}
 	j = 0;
-	while (s2[j] != '\0')
+	rtn = malloc(sizeof (char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	if (!rtn)
+		return (NULL);
+	while (s1 && s1[i] != '\0')
 	{
-		str[i + j] = s2[j];
+		rtn[j] = s1[i];
+		i++;
 		j++;
 	}
-	str[i + j] = '\0';
-	return (str);
-}*/
-char	*ft_strjoin(char const *s1, char const *s2)
-{
-	size_t	len1, len2;
-	size_t	i, j;
-	char	*str;
-
-	if (!s1 || !s2)
-		return (NULL);  // Do this BEFORE using s1 or s2
-
-	len1 = ft_strlen(s1);
-	len2 = ft_strlen(s2);
-	str = malloc(len1 + len2 + 1);
-	if (!str)
-		return (NULL);
-	
 	i = 0;
-	while (i < len1)
+	while (s2 && s2[i] != '\0')
 	{
-		str[i] = s1[i];
+		rtn[j] = s2[i];
 		i++;
-	}
-	j = 0;
-	while (j < len2)
-	{
-		str[i + j] = s2[j];
 		j++;
 	}
-	str[i + j] = '\0';
-	return (str);
+	rtn[j] = '\0';
+	return ((char *)rtn);
 }
-
 /*
-int main ()
+int	main(void)
 {
-	char *s1 = "Hello ";
-	char    *s2 = "World";
-	printf ("%s", ft_strjoin(s1,s2));
+	printf("%s", ft_strjoin("voce e incrivel", "mente gay"));
 }*/
