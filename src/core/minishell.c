@@ -6,7 +6,7 @@
 /*   By: kwillian <kwillian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 20:39:41 by kwillian          #+#    #+#             */
-/*   Updated: 2025/07/18 19:04:17 by kwillian         ###   ########.fr       */
+/*   Updated: 2025/07/25 01:39:27 by kwillian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 void	exec_clean(t_shell *shell)
 {
+	shell->mistake = 0;
+	shell->mistake2 = 0;
 	shell->exit_code = 0;
 	execute_all_cmds(shell);
 	close_redirections(shell->cmd);
@@ -28,6 +30,8 @@ int	run(t_shell *shell)
 
 	while (1)
 	{
+		shell->mistake = 0;
+		g_heredoc_interrupted = 0;
 		check_cwd();
 		signal_search(ROOT);
 		input = readline("minishell: ");
@@ -38,12 +42,7 @@ int	run(t_shell *shell)
 			free(input);
 			continue ;
 		}
-		add_history(input);
-		if (ft_strlen(input) != 0 && process_shell_input(shell, input))
-		{
-			shell->cmd = parse_cmd(shell, shell->begin);
-			exec_clean(shell);
-		}
+		validator(input, shell);
 		free(input);
 	}
 	return (1);

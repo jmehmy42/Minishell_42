@@ -6,7 +6,7 @@
 /*   By: kwillian <kwillian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 18:12:13 by kwillian          #+#    #+#             */
-/*   Updated: 2025/07/18 18:52:54 by kwillian         ###   ########.fr       */
+/*   Updated: 2025/07/24 16:56:03 by kwillian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ static void	fork_loop(t_shell *shell, t_pipexinfo *info, t_cmd_r *clean)
 		info->pid = fork();
 		if (info->pid == 0)
 		{
+			heredoc_ctrl_c(shell);
 			if (info->fd[1] != -1)
 				close(info->fd[0]);
 			run_children(shell, clean, info, cmd);

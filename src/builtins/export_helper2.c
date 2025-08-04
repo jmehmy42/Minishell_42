@@ -95,10 +95,7 @@ void	update_env_export(t_shell *shell, char **args)
 			}
 		}
 		else
-		{
 			ft_putstr_fd("export: not a valid identifier\n", 2);
-			shell->exit_code = 1;
-		}
 		i++;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: kwillian <kwillian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 18:28:02 by kwillian          #+#    #+#             */
-/*   Updated: 2025/07/18 18:44:52 by kwillian         ###   ########.fr       */
+/*   Updated: 2025/07/25 01:33:03 by kwillian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,30 +40,13 @@ void	non_path(t_shell *sh, char *full, t_cmd_r *cl)
 
 static void	check_access_and_errors(t_shell *sh, char *full)
 {
-	if (access(full, F_OK) != 0)
+	if (sh->mistake)
 	{
-		ft_putstr_fd(full, 2);
-		ft_putstr_fd(": No such file or directory\n", 2);
 		free(full);
 		final_cleaner(sh);
-		exit(127);
+		exit(1);
 	}
-	if (check_is_dir(full))
-	{
-		ft_putstr_fd(full, 2);
-		ft_putstr_fd(": Is a directory\n", 2);
-		free(full);
-		final_cleaner(sh);
-		exit(126);
-	}
-	if (access(full, X_OK) != 0)
-	{
-		ft_putstr_fd(full, 2);
-		ft_putstr_fd(": Permission denied\n", 2);
-		free(full);
-		final_cleaner(sh);
-		exit(126);
-	}
+	file_checker(sh, full);
 }
 
 static void	exec_external(t_shell *sh, t_cmd_r *cl)

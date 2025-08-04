@@ -6,7 +6,7 @@
 /*   By: kwillian <kwillian@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 00:41:04 by kwillian          #+#    #+#             */
-/*   Updated: 2025/07/18 18:52:49 by kwillian         ###   ########.fr       */
+/*   Updated: 2025/07/24 11:21:38 by kwillian         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ int	ft_find_last(char **args)
 
 void	redirect_io(t_red *redir, t_pipexinfo *info, int last_cmd)
 {
+	(void)info;
 	if (last_cmd == 0 && redir && redir->heredoc > 0)
 	{
 		dup2(redir->heredoc, STDIN_FILENO);
@@ -57,13 +58,19 @@ void	redirect_io(t_red *redir, t_pipexinfo *info, int last_cmd)
 		dup2(info->fd_in, STDIN_FILENO);
 }
 
-void	run_children(t_shell *shell, t_cmd_r *clean \
-	, t_pipexinfo *info, t_cmd *cmd)
+void	run_children(t_shell *shell, t_cmd_r *clean\
+, t_pipexinfo *info, t_cmd *cmd)
 {
 	t_red	*redir;
 	int		last_cmd;
 
 	redir = cmd->redirect;
+	if (is_illegal_file_read(cmd, info))
+	{
+		close_extra_fds();
+		freedom(shell);
+		exit(1);
+	}
 	last_cmd = ft_find_last(cmd->args);
 	redirect_io(redir, info, last_cmd);
 	if (redir && redir->outfd > 0)
@@ -99,9 +106,11 @@ void	run_child(t_cmd_r *clean, t_shell *shell, t_pipexinfo *info)
 	int	processor;
 	int	status;
 
+	status = 0;
 	processor = fork();
 	if (processor == 0)
 	{
+		heredoc_ctrl_c(shell);
 		if (is_heredoc(shell->cmd))
 			signal_search(HEREDOC_CHILD);
 		else
