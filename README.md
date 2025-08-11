@@ -1,43 +1,92 @@
-# 🐚Minishell
+# Minishell
 
-> A Unix shell recreation project developed at School 42.
-
-## 🧠 Objective
-
-The **Minishell** project is designed to build a simple shell from scratch, gaining a deep understanding of how a real Unix shell works. The program interprets user input, executes commands, manages processes, and handles redirections, pipes, environment variables, and more.
+Welcome to **Minishell** — a lightweight, educational shell implementation in C, inspired by the UNIX shell. This project was crafted as part of the 42 curriculum to deepen understanding of process management, parsing, and command execution in a UNIX environment.
 
 ---
 
-## ✅ Features
+## 🚀 Features
 
-- Execution of simple and compound commands
-- Support for multiple **pipes** (`|`)
-- Redirection support:
-  - Input (`<`)
-  - Output (`>`)
-  - Append (`>>`)
-  - Heredoc (`<<`)
-- Built-in commands implemented:
-  - `echo`
-  - `cd`
-  - `pwd`
-  - `export`
-  - `unset`
-  - `env`
-  - `exit`
-- Environment variable handling (`$VAR`)
-- Variable expansion (`$?`, `~`, etc.)
-- Works even with minimal or empty `PATH`
-- Signal handling (`Ctrl+C`, `Ctrl+D`, `Ctrl+\`)
-- Memory management (no leaks, no "still reachable")
+- **Built-in commands:**  
+  - `cd`, `echo`, `pwd`, `export`, `unset`, `env`, `exit`
+- **External command execution**
+- **Pipes & Redirections:**  
+  - Support for `|`, `>`, `<`, `>>`
+- **Environment variable management**
+- **Signal handling**  
+  - Gracefully handles `Ctrl+C`, `Ctrl+D`, `Ctrl+\`
+- **Error messages and status codes**
+- **Minimal memory leaks** (Valgrind-friendly)
 
 ---
 
-## 🛠️ How to Compile
+## 📦 Getting Started
+
+### Prerequisites
+
+- GCC or Clang
+- Make
+
+### Build and Run
 
 ```bash
-  - make
-  - make v (To use valgrind)
-  - env -i ./minishell (To use without enviroment VARS)
-  - make re (To recompile)
-  - make fclean (To clean everything)
+make
+./minishell
+```
+
+---
+
+## 🛠️ Usage
+
+Type commands as you would in a standard shell:
+
+```bash
+minishell$ echo Hello, Minishell!
+Hello, Minishell!
+
+minishell$ export NAME=42
+minishell$ echo $NAME
+42
+```
+
+Supports chaining with pipes and using redirections:
+
+```bash
+minishell$ ls -l | grep minishell > result.txt
+```
+
+---
+
+## 📚 Project Structure
+
+- **src/** — Source files
+- **include/** — Header files
+- **Makefile** — Build instructions
+
+---
+
+## 🧑‍💻 Authors
+
+- [jmehmy42](https://github.com/jmehmy42)
+- [Kevin](https://github.com/Kevinwmiguel)
+
+---
+
+## 🎓 About
+
+Minishell was developed as part of the [42 School](https://42.fr/en/homepage/) curriculum, focusing on reproducing essential shell features from scratch using C and the UNIX API.
+
+---
+
+## 📄 License
+
+This project is for educational purposes only.
+
+---
+
+## 🙌 Acknowledgements
+
+Special thanks to the 42 Network and community for guidance and resources!
+
+---
+
+> _“The shell is both a command interpreter and a programming language.”_
